@@ -71,7 +71,6 @@ public class TestRTree
     {
       coords[0] = i;
       List<Object> results = rt.search(coords, dims);
-      assert(results.isEmpty());
       assert(results.get(0) == entries[i]);
     }
   }
