@@ -47,12 +47,12 @@ public class RTree<T>
   
   private Node buildRoot(boolean asLeaf)
   {
-    float[] initCoords = new float[numDims];
-    float[] initDimensions = new float[numDims];
+    double[] initCoords = new double[numDims];
+    double[] initDimensions = new double[numDims];
     for ( int i = 0; i < this.numDims; i++ )
     {
-      initCoords[i] = (float)Math.sqrt(Float.MAX_VALUE);
-      initDimensions[i] = -2.0f * (float)Math.sqrt(Float.MAX_VALUE);
+      initCoords[i] = Math.sqrt(Double.MAX_VALUE);
+      initDimensions[i] = -2.0f * Math.sqrt(Double.MAX_VALUE);
     }
     return new Node(initCoords, initDimensions, asLeaf);
   }
@@ -99,7 +99,7 @@ public class RTree<T>
    * @param dimensions the dimensions of the rectangle.
    * @return a list of objects whose rectangles overlap with the given rectangle.
    */
-  public List<T> search(float[] coords, float[] dimensions)
+  public List<T> search(double[] coords, double[] dimensions)
   {
     assert(coords.length == numDims);
     assert(dimensions.length == numDims);
@@ -108,7 +108,7 @@ public class RTree<T>
     return results;
   }
   
-  private void search(float[] coords, float[] dimensions, Node n, LinkedList<T> results)
+  private void search(double[] coords, double[] dimensions, Node n, LinkedList<T> results)
   {
     if ( n.leaf )
     {
@@ -140,7 +140,7 @@ public class RTree<T>
    * @param entry the entry to delete
    * @return true iff the entry was deleted from the RTree.
    */
-  public boolean delete(float[] coords, float[] dimensions, T entry)
+  public boolean delete(double[] coords, double[] dimensions, T entry)
   {
     assert(coords.length == numDims);
     assert(dimensions.length == numDims);
@@ -166,7 +166,7 @@ public class RTree<T>
     return (toRemove != null);
   }
   
-  private Node findLeaf(Node n, float[] coords, float[] dimensions, T entry)
+  private Node findLeaf(Node n, double[] coords, double[] dimensions, T entry)
   {
     if ( n.leaf )
     {
@@ -246,7 +246,7 @@ public class RTree<T>
    * @param dimensions the dimensions of the rectangle
    * @param entry the entry to insert
    */
-  public void insert(float[] coords, float[] dimensions, T entry)
+  public void insert(double[] coords, double[] dimensions, T entry)
   {
     assert(coords.length == numDims);
     assert(dimensions.length == numDims);
@@ -330,8 +330,8 @@ public class RTree<T>
       Node c = cc.pop();
       Node preferred;
       // Implementation of linear PickNext
-      float e0 = getRequiredExpansion(nn[0].coords, nn[0].dimensions, c);
-      float e1 = getRequiredExpansion(nn[1].coords, nn[1].dimensions, c);
+      double e0 = getRequiredExpansion(nn[0].coords, nn[0].dimensions, c);
+      double e1 = getRequiredExpansion(nn[1].coords, nn[1].dimensions, c);
       if ( e0 < e1 )
       {
         preferred = nn[0];
@@ -342,8 +342,8 @@ public class RTree<T>
       }
       else
       {
-        float a0 = getArea(nn[0].dimensions);
-        float a1 = getArea(nn[1].dimensions);
+        double a0 = getArea(nn[0].dimensions);
+        double a1 = getArea(nn[1].dimensions);
         if ( a0 < a1 )
         {
           preferred = nn[0];
@@ -379,11 +379,11 @@ public class RTree<T>
   private RTree<T>.Node[] pickSeeds(LinkedList<Node> nn)
   {
     RTree<T>.Node[] bestPair = null;
-    float bestSep = 0.0f;
+    double bestSep = 0.0f;
     for ( int i = 0; i < numDims; i++ )
     {
-      float dimLb = Float.MAX_VALUE, dimMinUb = Float.MAX_VALUE;
-      float dimUb = -1.0f * Float.MAX_VALUE, dimMaxLb = -1.0f * Float.MAX_VALUE;
+      double dimLb = Double.MAX_VALUE, dimMinUb = Double.MAX_VALUE;
+      double dimUb = -1.0f * Double.MAX_VALUE, dimMaxLb = -1.0f * Double.MAX_VALUE;
       Node nMaxLb = null, nMinUb = null;
       for ( Node n: nn )
       {
@@ -406,7 +406,7 @@ public class RTree<T>
           nMinUb = n;
         }
       }
-      float sep = Math.abs((dimMinUb - dimMaxLb) / (dimUb - dimLb));
+      double sep = Math.abs((dimMinUb - dimMaxLb) / (dimUb - dimLb));
       if ( sep >= bestSep )
       {
         bestPair = new RTree.Node[] { nMaxLb, nMinUb };
@@ -420,11 +420,11 @@ public class RTree<T>
   
   private void tighten(Node n)
   {
-    float[] minCoords = new float[n.coords.length];
-    float[] maxDimensions = new float[n.dimensions.length];
+    double[] minCoords = new double[n.coords.length];
+    double[] maxDimensions = new double[n.dimensions.length];
     for (int i = 0; i < minCoords.length; i++ )
     {
-      minCoords[i] = Float.MAX_VALUE;
+      minCoords[i] = Double.MAX_VALUE;
       maxDimensions[i] = 0.0f;
 
       for (Node c: n.children)
@@ -452,11 +452,11 @@ public class RTree<T>
     {
       return n;
     }
-    float minInc = Float.MAX_VALUE;
+    double minInc = Double.MAX_VALUE;
     Node next = null;
     for ( RTree<T>.Node c: n.children )
     {
-      float inc = getRequiredExpansion( c.coords, c.dimensions, e );
+      double inc = getRequiredExpansion( c.coords, c.dimensions, e );
       if ( inc < minInc )
       {
         minInc = inc;
@@ -464,8 +464,8 @@ public class RTree<T>
       }
       else if ( inc == minInc )
       {
-        float curArea = 1.0f;
-        float thisArea = 1.0f;
+        double curArea = 1.0f;
+        double thisArea = 1.0f;
         for ( int i = 0; i < c.dimensions.length; i++ )
         {
           curArea *= next.dimensions[i];
@@ -483,10 +483,10 @@ public class RTree<T>
   /**
    * Returns the increase in area necessary for the given rectangle to cover the given entry.
    */
-  private float getRequiredExpansion( float[] coords, float[] dimensions, Node e )
+  private double getRequiredExpansion( double[] coords, double[] dimensions, Node e )
   {
-    float area = getArea(dimensions);
-    float[] deltas = new float[dimensions.length];
+    double area = getArea(dimensions);
+    double[] deltas = new double[dimensions.length];
     for ( int i = 0; i < deltas.length; i++ )
     {
       if ( coords[i] + dimensions[i] < e.coords[i] + e.dimensions[i] )
@@ -498,7 +498,7 @@ public class RTree<T>
         deltas[i] = coords[i] - e.coords[i];
       }
     }
-    float expanded = 1.0f;
+    double expanded = 1.0f;
     for ( int i = 0; i < dimensions.length; i++ )
     {
       area *= dimensions[i] + deltas[i];
@@ -506,9 +506,9 @@ public class RTree<T>
     return (expanded - area);
   }
   
-  private float getArea(float[] dimensions)
+  private double getArea(double[] dimensions)
   {
-    float area = 1.0f;
+    double area = 1.0f;
     for ( int i = 0; i < dimensions.length; i++ )
     {
       area *= dimensions[i];
@@ -516,7 +516,7 @@ public class RTree<T>
     return area;
   }
   
-  private boolean isOverlap( float[] scoords, float[] sdimensions, float[] coords, float[] dimensions )
+  private boolean isOverlap( double[] scoords, double[] sdimensions, double[] coords, double[] dimensions )
   {
     for ( int i = 0; i < scoords.length; i++ )
     {
@@ -549,21 +549,21 @@ public class RTree<T>
   
   private class Node
   {
-    final float[] coords;
-    final float[] dimensions;
+    final double[] coords;
+    final double[] dimensions;
     final LinkedList<Node> children;
     final boolean leaf;
     
     Node parent;
     
-    private Node(float[] coords, float[] dimensions, boolean leaf)
+    private Node(double[] coords, double[] dimensions, boolean leaf)
     {
-      this.coords = new float[coords.length];
-      this.dimensions = new float[dimensions.length];
+      this.coords = new double[coords.length];
+      this.dimensions = new double[dimensions.length];
       System.arraycopy(coords, 0, this.coords, 0, coords.length);
       System.arraycopy(dimensions, 0, this.dimensions, 0, dimensions.length);
       this.leaf = leaf;
-      children = new LinkedList<Node>();;
+      children = new LinkedList<Node>();
     }
     
   }
@@ -572,7 +572,7 @@ public class RTree<T>
   {
     final T entry;
     
-    public Entry(float[] coords, float[] dimensions, T entry)
+    public Entry(double[] coords, double[] dimensions, T entry)
     {
       // an entry isn't actually a leaf (its parent is a leaf)
       // but all the algorithms should stop at the first leaf they encounter,
