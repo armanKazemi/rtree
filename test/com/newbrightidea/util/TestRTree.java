@@ -6,8 +6,8 @@ import org.junit.Test;
 
 public class TestRTree
 {
-  private static final float[] ZEROES = { 0.0f, 0.0f };
-  private static final float[] ONES = {1.0f, 1.0f};
+  private static final double[] ZEROES = { 0.1, 0.1 };
+  private static final double[] ONES = {1.1, 1.1};
 
   @Test
   public void testCreation()
@@ -22,8 +22,8 @@ public class TestRTree
     Object o = new Object();
     rt.insert(ZEROES, ZEROES, o);
     List<Object> results =
-      rt.search(new float[] {-1.0f, -1.0f},
-                new float[] { 2.0f,  2.0f});
+      rt.search(new double[] {-1.1, -1.1},
+                new double[] { 2.1,  2.1});
     assert(results.get(0) == o);
   }
   
@@ -34,8 +34,8 @@ public class TestRTree
     Object o = new Object();
     rt.insert(ZEROES, ONES, o);
     List<Object> results =
-      rt.search( new float[] {-1.0f, -1.0f},
-                 new float[] {3.0f, 3.0f} );
+      rt.search( new double[] {-1.1, -1.1},
+                 new double[] {3.1, 3.1} );
     assert(results.get(0) == o);
   }
   
@@ -46,8 +46,8 @@ public class TestRTree
     Object o = new Object();
     rt.insert(ZEROES, ZEROES, o);
     List<Object> results =
-      rt.search(new float[] {-1.0f, -1.0f},
-                new float[] { 0.5f,  0.5f});
+      rt.search(new double[] {-1.1, -1.1},
+                new double[] { 0.1,  0.1});
     assert(results.isEmpty());
   }
   
@@ -56,8 +56,8 @@ public class TestRTree
   {
     RTree<Object> rt = new RTree<Object>(50,2,2);
     int numEntries = rt.getMaxEntries() * 4;
-    float[] coords = new float[] { 0.0f, 0.0f };
-    float[] dims = new float[] { 0.5f, 0.5f };
+    double[] coords = new double[] { 0.1, 0.1 };
+    double[] dims = new double[] { 0.1, 0.1 };
     Object[] entries = new Object[numEntries];
     
     for ( int i = 0; i < numEntries; i++ )
@@ -71,7 +71,7 @@ public class TestRTree
     {
       coords[0] = i;
       List<Object> results = rt.search(coords, dims);
-      assert(results.size() == 0);
+      assert(results.isEmpty());
       assert(results.get(0) == entries[i]);
     }
   }
@@ -87,6 +87,6 @@ public class TestRTree
     assert(results.size() == 1);
     rt.delete(ZEROES, ONES, entry);
     results = rt.search(ZEROES, ONES);
-    assert(results.size() == 0);
+    assert(results.isEmpty());
   }
 }
