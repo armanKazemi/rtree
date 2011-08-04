@@ -6,8 +6,8 @@ import org.junit.Test;
 
 public class TestRTree
 {
-  private static final double[] ZEROES = { 0.1, 0.1 };
-  private static final double[] ONES = {1.1, 1.1};
+  private static final double[] ZEROES = { 0.0, 0.0 };
+  private static final double[] ONES = {1.0, 1.0};
 
   @Test
   public void testCreation()
@@ -22,8 +22,8 @@ public class TestRTree
     Object o = new Object();
     rt.insert(ZEROES, ZEROES, o);
     List<Object> results =
-      rt.search(new double[] {-1.1, -1.1},
-                new double[] { 2.1,  2.1});
+      rt.search(new double[] {-1.0, -1.0},
+                new double[] { 2.0,  2.0});
     assert(results.get(0) == o);
   }
   
@@ -34,8 +34,8 @@ public class TestRTree
     Object o = new Object();
     rt.insert(ZEROES, ONES, o);
     List<Object> results =
-      rt.search( new double[] {-1.1, -1.1},
-                 new double[] {3.1, 3.1} );
+      rt.search( new double[] {-1.0, -1.0},
+                 new double[] {3.0, 3.0} );
     assert(results.get(0) == o);
   }
   
@@ -46,8 +46,8 @@ public class TestRTree
     Object o = new Object();
     rt.insert(ZEROES, ZEROES, o);
     List<Object> results =
-      rt.search(new double[] {-1.1, -1.1},
-                new double[] { 0.1,  0.1});
+      rt.search(new double[] {-1.0, -1.0},
+                new double[] { 0.5,  0.5});
     assert(results.isEmpty());
   }
   
@@ -56,8 +56,8 @@ public class TestRTree
   {
     RTree<Object> rt = new RTree<Object>(50,2,2);
     int numEntries = rt.getMaxEntries() * 4;
-    double[] coords = new double[] { 0.1, 0.1 };
-    double[] dims = new double[] { 0.1, 0.1 };
+    double[] coords = new double[] { 0.0, 0.0 };
+    double[] dims = new double[] { 0.5, 0.5 };
     Object[] entries = new Object[numEntries];
     
     for ( int i = 0; i < numEntries; i++ )
