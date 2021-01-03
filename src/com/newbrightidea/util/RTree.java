@@ -155,6 +155,7 @@ public class RTree<T>
       if ( e.entry.equals(entry) )
       {
         toRemove = e.entry;
+        l.children.remove(e);
         break;
       }
     }
